@@ -47,6 +47,7 @@ commands:
   --extract = extracts a tarfile (optional not recommended) ex: tar2rpm --extract ~/tar2rpm.tar.xz
   --dae = dae means upload and extract. output: Enter the tar file URL:
   --prompt = prompts the user so the user can customize the spec file how they like it.
+  --metf   = metf stands for move extracted file, which moves the specifed tarfile to directory rpmbuild. ex: tar2rpm --metf ~/tar2deb-1.0.0.tar.xz
   --help|--h = displays this message ex: tar2rpm --help or --h
 
 contact/accounts: 
@@ -54,6 +55,8 @@ contact/accounts:
   github: https://github.com/gitxpresso
 
 EOF 
+if [[ "$1" == "--metf" ]]; then
+mv $1 ~/rpmbuild/SOURCES 
 if [[ "$1" == "--prompt" ]]; then
    prompt
 fi
