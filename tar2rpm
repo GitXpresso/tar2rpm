@@ -1,5 +1,5 @@
 # work in progress
-option1(){
+dae(){
 
 # Prompt for URL and validate
 while true; do
@@ -31,9 +31,17 @@ tar2rpm is a bash script to convert a tarfile into a rpm file.
 commands:
   --extract = extracts a tarfile ex: tar2rpm --extract ~/tar2rpm.tar.xz
   --dae = dae means upload and extract. output: Enter the tar file URL:
+  --prompt = prompts the user so the user can customize the spec file how they like it.
   --help|--h = displays this message ex: tar2rpm --help or --h
 
 EOF 
+if [[ "$1" == "--prompt" ]]; then
+   prompt
+fi
+if [[ "$1" == "--dae" ]]; then
+    dae
+fi
+
 if [[ "$1" == "--h" || "$1" == "--help" ]]
    help
 fi
