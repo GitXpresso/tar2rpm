@@ -56,7 +56,6 @@ contact/accounts:
 
 EOF 
 if [[ "$1" == "--metf" ]]; then
-mv $1 ~/rpmbuild/SOURCES 
 if [[ "$1" == "--prompt" ]]; then
    prompt
 fi
