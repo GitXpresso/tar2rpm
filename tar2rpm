@@ -1,4 +1,19 @@
+
 # work in progress
+updateandinstall(){
+if [[ -d /etc/apt ]]; then
+     sudo apt update  && sudo apt install -y rpm tar bash wget
+elif [[ -d /etc/dnf ]]; then
+     sudo dnf update -y && sudo dnf -y rpm-build tar bash wget 
+if 
+}
+updateandinstall
+if [[ ! -d "$HOME/rpmbuild" ]]; then
+mkdir -p rpmbuild/{BUILD,SOURCES,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS} 
+if [[ -d "$HOME/rpmbuild" ]]; then
+rm -rf ~/rpmbuild/BUILDROOT/* && rm -rf ~/rpmbuild/SOURCES/* && rm -rf ~/rpmbuild/BUILD/*
+mkdir -p ~/rpmfiles && mv ~/rpmbuild/RPMS/* ~/rpmfiles
+mkdir -p ~/srpmfiles && mv ~/rpmbuild/SRPMS/* ~/srpmfiles
 dae(){
 
 # Prompt for URL and validate
@@ -29,10 +44,14 @@ cat << EOF
 tar2rpm is a bash script to convert a tarfile into a rpm file.
 
 commands:
-  --extract = extracts a tarfile ex: tar2rpm --extract ~/tar2rpm.tar.xz
+  --extract = extracts a tarfile (optional not recommended) ex: tar2rpm --extract ~/tar2rpm.tar.xz
   --dae = dae means upload and extract. output: Enter the tar file URL:
   --prompt = prompts the user so the user can customize the spec file how they like it.
   --help|--h = displays this message ex: tar2rpm --help or --h
+
+contact/accounts: 
+  email: wg9797@outlook.com
+  github: https://github.com/gitxpresso
 
 EOF 
 if [[ "$1" == "--prompt" ]]; then
@@ -47,5 +66,5 @@ if [[ "$1" == "--h" || "$1" == "--help" ]]
 fi
 
 if [[ "$1" == "--extract" ]]; then 
-    tar -xvf $2
+    tar -xvf $2 -C ~/rpmbuild/SOURCES
 fi
