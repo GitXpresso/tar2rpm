@@ -1,0 +1,43 @@
+# work in progress
+option1(){
+
+# Prompt for URL and validate
+while true; do
+    read -p "Enter the tar file URL: " TAR_URL
+    [[ -z "$TAR_URL" || ! "$TAR_URL" =~ ^https?://[a-zA-Z0-9./_-]+$ ]] && echo "Invalid URL, try again." || break
+done
+
+# Download the tar file
+TAR_FILE=$(basename "$TAR_URL")
+DEST_FILE="$HOME/$TAR_FILE"
+echo "Downloading $TAR_FILE..."
+wget -q --show-progress -O "$DEST_FILE" "$TAR_URL" 
+
+# Check download success
+[[ ! -f "$DEST_FILE" ]] && echo "Download failed!" && exit 1
+
+# Extract and cleanup
+TAR_DIR=$(tar -xvf "$DEST_FILE" -C ~/ | cut -d / -f1 | uniq)
+rm $DEST_FILE
+clear
+
+}
+
+help(){
+cat << EOF
+
+tar2rpm is a bash script to convert a tarfile into a rpm file.
+
+commands:
+  --extract = extracts a tarfile ex: tar2rpm --extract ~/tar2rpm.tar.xz
+  --dae = dae means upload and extract. output: Enter the tar file URL:
+  --help|--h = displays this message ex: tar2rpm --help or --h
+
+EOF 
+if [[ "$1" == "--h" || "$1" == "--help" ]]
+   help
+fi
+
+if [[ "$1" == "--extract" ]]; then 
+    tar -xvf $2
+fi
