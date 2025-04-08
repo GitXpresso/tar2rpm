@@ -24,8 +24,11 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p %{buildroot}/usr/share/zen
 mkdir -p %{buildroot}/usr/bin
 cp -a . %{buildroot}/usr/share/zen
+rm -f %{buildroot}/usr/bin/zen   # Remove any existing file or symlink
+rm -f %{buildroot}/usr/bin/zen-bin   # Remove any existing file or symlink
 ln -s /usr/share/zen/zen %{buildroot}/usr/bin/zen
-ln -s /usr/share/zen/zen-bin %{buildroot}/usr/bin/zen
+ln -s /usr/share/zen/zen-bin %{buildroot}/usr/bin/zen-bin
+
 
 %files
 %defattr(-,root,root,-)
@@ -33,5 +36,5 @@ ln -s /usr/share/zen/zen-bin %{buildroot}/usr/bin/zen
 /usr/bin/zen
 /usr/bin/zen-bin
 %changelog
-* Mon Apr 07 2025 William <wg9797@outlook.com> - 1.10b-1
+* Mon Apr 07 2025 William <wg9797@outlook.com> - 1.10-1
 - Initial package.
