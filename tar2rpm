@@ -106,8 +106,8 @@ cat << _EOF_
 tar2rpm is a bash script to convert a tarfile into a rpm file.
 
 commands:
-  --extract|--e = extracts a tarfile (optional not recommended, may not work.) ex: tar2rpm --extract ~/tar2rpm.tar.xz
-  --uae = dae means upload and extract. output: Enter the tar file URL:
+  --extract|--e = extracts a tarfile (optional not recommended, rpm building process may fail.) ex: tar2rpm --extract ~/tar2rpm.tar.xz
+  --uae = dae means upload and extract (optional not recommended, rpm building process may fail). output: Enter the tar file URL:
   --prompt|--p = prompts the user so the user can customize the spec file how they like it.
   --move|--m = moves the specified tarfile to the ~/rpmbuild/SOURCES directory ex: tar2rpm --move ~/tar2rpm.tar.xz
   --help|--h = displays this message ex: tar2rpm --help or --h
