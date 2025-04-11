@@ -83,30 +83,24 @@ contact/accounts:
 _EOF_
 
 }
-if [[ "$1" == "--prompt" || "$1" == "--p" ]]; then
-   prompt
-else
-help
-exit 1
-fi
-if [[ "$1" == "--dae" ]]; then
-    dae
-else
-help
-exit 1
-fi
-
-if [[ "$1" == "--h" || "$1" == "--help" ]]; then
-   help
-else
-help
-exit 1
-fi
-if [[ "$1" == "--move" || "$1" == "--m" ]]; then
-mv $2 ~/rpmbuild/SOURCES
-else
-help
-exit 1
-if [[ "$1" == "--extract" || "$1" == "--e" ]]; then 
-  TAR_DIR=$(tar -xvf $2 -C ~/rpmbuild/SOURCES | cut -d / -f1 | uniq)
-fi
+  case $1 in
+   --prompt|--p) 
+    prompt
+    ;;
+    --dae) 
+    dae 
+    ;;
+    --help|--h)
+    help
+    ;;
+    --move|--m)
+    mv $2 ~/rpmbuild/SOURCES
+    ;;
+    --extract|--e)
+    TAR_DIR=$(tar -xvf $2 -C ~/rpmbuild/SOURCES | cut -d / -f1 | uniq)
+    ;;
+    *)
+    help
+    ;;
+    
+esac
