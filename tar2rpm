@@ -3,51 +3,68 @@ if [ -d /etc/apt ]; then
 
    if [ -f /usr/bin/tar ]; then
        echo "tar is installed."
+       sleep 0.5
+       clear
    else
    echo "tar is not installed, installing..." 
    sudo apt install -y tar
+   clear
    fi
    if [ -f /usr/bin/wget ]; then
       echo "wget is installed."
+      sleep 0.5
+      clear
       else
       echo "wget is not installed, installing..."
       sudo apt install wget -y
+      clear
    fi
    if [ -f /usr/bin/rpmbuild ] && [ -f /usr/bin/rpm ]; then
-   echo "rpm-build and rpm installed."
+      echo "rpm-build and rpm installed."
+      sleep 0.5
+      clear
    else
-   echo "rpm-build and rpm is not installed, installing..."
-   sudo apt install -y rpm
+      echo "rpm-build and rpm is not installed, installing..."
+      sudo apt install -y rpm
+      clear
    fi
 fi
 if [ -d /etc/dnf ]; then 
    if [ -f /usr/bin/rpmbuild ]; then
       echo "rpmbuild is installed"
+      sleep 0.5
+      clear
    else
       echo "rpmbuild is not installed, installing..."
       sudo dnf install -y rpmbuild
+      clear
    fi
    if [ -f /usr/bin/wget ]; then 
       echo "wget is installed."
+      sleep 0.5
+      clear
    else
       echo "wget is not installed, installing..."
       sudo dnf install -y wget
+      clear
    fi
    if [ -f /usr/bin/tar ]; then
       echo "tar is installed."
+      sleep 0.5
+      clear
    else
       echo "tar is not installed, installing..."
       sudo dnf install -y tar
+      clear
    fi
 fi
-dae(){
+prompt(){
 
 # Prompt for URL and validate
 while true; do
     read -p "Enter the tar file URL: " TAR_URL
     [[ -z "$TAR_URL" || ! "$TAR_URL" =~ ^https?://[a-zA-Z0-9./_-]+$ ]] && echo "Invalid URL, try again." || break
 done
-
 # Download the tar file
 TAR_FILE=$(basename "$TAR_URL")
 DEST_FILE="$HOME/$TAR_FILE"
@@ -64,6 +81,25 @@ clear
 
 }
 
+uae(){
+  # Prompt for URL and validate
+while true; do
+    read -p "Enter the tar file URL: " TAR_URL
+    [[ -z "$TAR_URL" || ! "$TAR_URL" =~ ^https?://[a-zA-Z0-9./_-]+$ ]] && echo "Invalid URL, try again." || break
+done
+# Download the tar file
+TAR_FILE=$(basename "$TAR_URL")
+DEST_FILE="$HOME/$TAR_FILE"
+echo "Downloading $TAR_FILE..."
+wget -q --show-progress -O "$DEST_FILE" "$TAR_URL" 
+
+# Check download success
+[[ ! -f "$DEST_FILE" ]] && echo "Download failed!" && exit 1
+
+# Extract and cleanup
+TAR_DIR=$(tar -xvf "$DEST_FILE" -C ~/rpmbuild/SOURCES | cut -d / -f1 | uniq)
+}
+
 help(){
 cat << _EOF_
 
@@ -71,7 +107,7 @@ tar2rpm is a bash script to convert a tarfile into a rpm file.
 
 commands:
   --extract|--e = extracts a tarfile (optional not recommended, may not work.) ex: tar2rpm --extract ~/tar2rpm.tar.xz
-  --dae = dae means upload and extract. output: Enter the tar file URL:
+  --uae = dae means upload and extract. output: Enter the tar file URL:
   --prompt|--p = prompts the user so the user can customize the spec file how they like it.
   --move|--m = moves the specified tarfile to the ~/rpmbuild/SOURCES directory ex: tar2rpm --move ~/tar2rpm.tar.xz
   --help|--h = displays this message ex: tar2rpm --help or --h
@@ -87,8 +123,8 @@ _EOF_
    --prompt|--p) 
     prompt
     ;;
-    --dae) 
-    dae 
+    --uae) 
+    uae 
     ;;
     --help|--h)
     help
