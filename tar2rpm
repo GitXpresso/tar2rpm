@@ -1,19 +1,45 @@
+#!/bin/bash
+if [ -d /etc/apt ]; then
 
-# work in progress
-updateandinstall(){
-if [[ -d /etc/apt ]]; then
-     sudo apt update  && sudo apt install -y rpm tar bash wget
-elif [[ -d /etc/dnf ]]; then
-     sudo dnf update -y && sudo dnf -y rpm-build tar bash wget 
-if 
-}
-updateandinstall
-if [[ ! -d "$HOME/rpmbuild" ]]; then
-mkdir -p rpmbuild/{BUILD,SOURCES,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS} 
-if [[ -d "$HOME/rpmbuild" ]]; then
-rm -rf ~/rpmbuild/BUILDROOT/* && rm -rf ~/rpmbuild/SOURCES/* && rm -rf ~/rpmbuild/BUILD/*
-mkdir -p ~/rpmfiles && mv ~/rpmbuild/RPMS/* ~/rpmfiles
-mkdir -p ~/srpmfiles && mv ~/rpmbuild/SRPMS/* ~/srpmfiles
+   if [ -f /usr/bin/tar ]; then
+       echo "tar is installed."
+   else
+   echo "tar is not installed, installing..." 
+   sudo apt install -y tar
+   fi
+   if [ -f /usr/bin/wget ]; then
+      echo "wget is installed."
+      else
+      echo "wget is not installed, installing..."
+      sudo apt install wget -y
+   fi
+   if [ -f /usr/bin/rpmbuild ] && [ -f /usr/bin/rpm ]; then
+   echo "rpm-build and rpm installed."
+   else
+   echo "rpm-build and rpm is not installed, installing..."
+   sudo apt install -y rpm
+   fi
+fi
+if [ -d /etc/dnf ]; then 
+   if [ -f /usr/bin/rpmbuild ]; then
+      echo "rpmbuild is installed"
+   else
+      echo "rpmbuild is not installed, installing..."
+      sudo dnf install -y rpmbuild
+   fi
+   if [ -f /usr/bin/wget ]; then 
+      echo "wget is installed."
+   else
+      echo "wget is not installed, installing..."
+      sudo dnf install -y wget
+   fi
+   if [ -f /usr/bin/tar ]; then
+      echo "tar is installed."
+   else
+      echo "tar is not installed, installing..."
+      sudo dnf install -y tar
+   fi
+fi
 dae(){
 
 # Prompt for URL and validate
@@ -39,34 +65,48 @@ clear
 }
 
 help(){
-cat << EOF
+cat << _EOF_
 
 tar2rpm is a bash script to convert a tarfile into a rpm file.
 
 commands:
-  --extract = extracts a tarfile (optional not recommended) ex: tar2rpm --extract ~/tar2rpm.tar.xz
+  --extract|--e = extracts a tarfile (optional not recommended, may not work.) ex: tar2rpm --extract ~/tar2rpm.tar.xz
   --dae = dae means upload and extract. output: Enter the tar file URL:
-  --prompt = prompts the user so the user can customize the spec file how they like it.
-  --metf   = metf stands for move extracted file, which moves the specifed tarfile to directory rpmbuild. ex: tar2rpm --metf ~/tar2deb-1.0.0.tar.xz
+  --prompt|--p = prompts the user so the user can customize the spec file how they like it.
+  --move|--m = moves the specified tarfile to the ~/rpmbuild/SOURCES directory ex: tar2rpm --move ~/tar2rpm.tar.xz
   --help|--h = displays this message ex: tar2rpm --help or --h
 
 contact/accounts: 
   email: wg9797@outlook.com
   github: https://github.com/gitxpresso
 
-EOF 
-if [[ "$1" == "--metf" ]]; then
-if [[ "$1" == "--prompt" ]]; then
+_EOF_
+
+}
+if [[ "$1" == "--prompt" || "$1" == "--p" ]]; then
    prompt
+else
+help
+exit 1
 fi
 if [[ "$1" == "--dae" ]]; then
     dae
+else
+help
+exit 1
 fi
 
-if [[ "$1" == "--h" || "$1" == "--help" ]]
+if [[ "$1" == "--h" || "$1" == "--help" ]]; then
    help
+else
+help
+exit 1
 fi
-
-if [[ "$1" == "--extract" ]]; then 
-    tar -xvf $2 -C ~/rpmbuild/SOURCES
+if [[ "$1" == "--move" || "$1" == "--m" ]]; then
+mv $2 ~/rpmbuild/SOURCES
+else
+help
+exit 1
+if [[ "$1" == "--extract" || "$1" == "--e" ]]; then 
+  TAR_DIR=$(tar -xvf $2 -C ~/rpmbuild/SOURCES | cut -d / -f1 | uniq)
 fi
